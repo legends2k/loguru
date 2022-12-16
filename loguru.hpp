@@ -199,6 +199,12 @@ Website: www.ilikebigbits.com
 #endif
 #endif
 
+#ifndef LOGURU_EXCEPTIONS
+    #if defined(__EXCEPTIONS) || (defined(_MSC_VER) && defined(_CPPUNWIND))
+        #define LOGURU_EXCEPTIONS
+    #endif
+#endif
+
 #ifdef LOGURU_USE_ANONYMOUS_NAMESPACE
 	#define LOGURU_ANONYMOUS_NAMESPACE_BEGIN namespace {
 	#define LOGURU_ANONYMOUS_NAMESPACE_END }

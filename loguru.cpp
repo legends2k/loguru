@@ -1173,7 +1173,7 @@ namespace loguru
 
 		do_replacements(s_user_stack_cleanups, output);
 		do_replacements(REPLACE_LIST, output);
-
+#ifdef LOGURU_EXCEPTIONS
 		try {
 			std::regex std_allocator_re(R"(,\s*std::allocator<[^<>]+>)");
 			output = std::regex_replace(output, std_allocator_re, std::string(""));
@@ -1183,7 +1183,7 @@ namespace loguru
 		} catch (std::regex_error&) {
 			// Probably old GCC.
 		}
-
+#endif
 		return output;
 	}
 
