@@ -1967,27 +1967,27 @@ namespace loguru
 
 		// --------------------------------------------------------------------
 
-		if (s_signal_options.unsafe_signal_handler) {
-			// --------------------------------------------------------------------
-			/* Now we do unsafe things. This can for example lead to deadlocks if
-			   the signal was triggered from the system's memory management functions
-			   and the code below tries to do allocations.
-			*/
+#if LOGURU_UNSAFE_SIGNAL_HANDLER
+		// --------------------------------------------------------------------
+		/* Now we do unsafe things. This can for example lead to deadlocks if
+		   the signal was triggered from the system's memory management functions
+		   and the code below tries to do allocations.
+		*/
 
-			flush();
-			char preamble_buff[LOGURU_PREAMBLE_WIDTH];
-			print_preamble(preamble_buff, sizeof(preamble_buff), Verbosity_FATAL, "", 0);
-			auto message = Message{Verbosity_FATAL, "", 0, preamble_buff, "", "Signal: ", signal_name};
-			try {
-				log_message(1, message, false, false);
-			} catch (...) {
-				// This can happed due to s_fatal_handler.
-				write_to_stderr("Exception caught and ignored by Loguru signal handler.\n");
-			}
-			flush();
-
-			// --------------------------------------------------------------------
+		flush();
+		char preamble_buff[LOGURU_PREAMBLE_WIDTH];
+		print_preamble(preamble_buff, sizeof(preamble_buff), Verbosity_FATAL, "", 0);
+		auto message = Message{Verbosity_FATAL, "", 0, preamble_buff, "", "Signal: ", signal_name};
+		try {
+			log_message(1, message, false, false);
+		} catch (...) {
+			// This can happed due to s_fatal_handler.
+			write_to_stderr("Exception caught and ignored by Loguru signal handler.\n");
 		}
+		flush();
+
+		// --------------------------------------------------------------------
+#endif // LOGURU_UNSAFE_SIGNAL_HANDLER
 
 		call_default_signal_handler(signal_number);
 	}

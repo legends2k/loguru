@@ -162,8 +162,8 @@ Website: www.ilikebigbits.com
 	#define LOGURU_WITH_STREAMS 1
 #endif
 
-#if defined(LOGURU_UNSAFE_SIGNAL_HANDLER)
-	#error "You are defining LOGURU_UNSAFE_SIGNAL_HANDLER. This is for older versions of Loguru. You should now instead set the unsafe_signal_handler option when you call loguru::init."
+#ifndef LOGURU_UNSAFE_SIGNAL_HANDLER
+	#define LOGURU_UNSAFE_SIGNAL_HANDLER 1
 #endif
 
 #if LOGURU_IMPLEMENTATION
