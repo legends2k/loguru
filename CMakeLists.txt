@@ -103,6 +103,7 @@ target_include_directories(loguru
 
 target_compile_features(loguru PUBLIC cxx_std_11)
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED) # defines IMPORTED target Threads::Threads
 target_link_libraries(loguru
   PUBLIC
@@ -115,6 +116,11 @@ set_target_properties(loguru
     VERSION   "${LOGURU_VERSION}"
     SOVERSION "${LOGURU_VERSION_MAJOR}"
     DEBUG_POSTFIX "d"
+)
+
+target_compile_options(loguru
+  PRIVATE
+    $<IF:$<CXX_COMPILER_ID:MSVC>,/GR-,-fno-rtti -fno-exceptions>
 )
 
 target_compile_definitions(loguru
@@ -138,6 +144,7 @@ target_compile_definitions(loguru
     $<$<NOT:$<STREQUAL:,${LOGURU_THREADNAME_WIDTH}>>:LOGURU_THREADNAME_WIDTH=${LOGURU_THREADNAME_WIDTH}>
     $<$<NOT:$<STREQUAL:,${LOGURU_SCOPE_TIME_PRECISION}>>:LOGURU_SCOPE_TIME_PRECISION=${LOGURU_SCOPE_TIME_PRECISION}>
     $<$<NOT:$<STREQUAL:,${LOGURU_VERBOSE_SCOPE_ENDINGS}>>:LOGURU_VERBOSE_SCOPE_ENDINGS=$<BOOL:${LOGURU_VERBOSE_SCOPE_ENDINGS}>>
+    LOGURU_UNSAFE_SIGNAL_HANDLER=0
 )
 
 # --- import and link fmt (if needed)
